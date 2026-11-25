@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marketing Report Dashboard · Ellen's Halo-Halo · Portfolio Demo by ZC Smart Digital</title>
+  <meta name="description" content="Portfolio Demo with Sample Data: four weeks of Facebook and Instagram results for the Ellen's Halo-Halo campaign.">
+  <link rel="icon" href="../social-media-campaign/png/01-feed-1080x1080.png">
+  <link rel="stylesheet" href="../_shared/demo-shell.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+  <header class="zc-shell" aria-label="ZC Smart Digital portfolio">
+    <a class="zc-back" href="/#portfolio" data-zc-back>&larr; Back to Demos</a>
+    <span class="zc-brand">ZC Smart Digital <b>&middot;</b> Marketing Report Dashboard</span>
+    <span class="zc-labels"><span class="zc-label">Sample Data</span><span class="zc-label zc-label--ghost">Portfolio Demo</span></span>
+  </header>
+
+  <div class="wrap head">
+    <div>
+      <p class="eyebrow">Monthly campaign report &middot; Meta ads</p>
+      <h1>Ellen&rsquo;s Halo-Halo <em>opening-weekend preorders</em></h1>
+      <p class="sub"><span class="badge">Sample Data</span> Fictional results, 19 Oct &ndash; 15 Nov 2026 &middot; amounts in Philippine pesos (₱). Goal: preorder inquiries (message conversations, counted as leads).</p>
+    </div>
+    <div class="downloads">
+      <a class="btn btn--ube" id="dlAll" href="data/ellens-halo-halo-sample-data.csv" download>Download CSV</a>
+      <button type="button" class="btn btn--line" id="dlFiltered">Download filtered CSV</button>
+    </div>
+  </div>
+
+  <main class="wrap" id="main">
+    <form class="filters" id="filters" aria-label="Filters" onsubmit="return false">
+      <label>Date range<select id="fPreset"></select></label>
+      <label>From<input type="date" id="fFrom"></label>
+      <label>To<input type="date" id="fTo"></label>
+      <label>Platform<select id="fPlat"><option value="">All platforms</option><option>Facebook</option><option>Instagram</option></select></label>
+      <label>Campaign<select id="fCamp"></select></label>
+      <button type="button" class="btn btn--line" id="resetBtn">Reset filters</button>
+    </form>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <section class="kpis" id="kpis" aria-label="Key results"></section>
+
+    <section class="card" aria-labelledby="chartTitle">
+      <div class="card-head">
+        <h2 id="chartTitle">Weekly <span id="metricName">spend</span> by platform</h2>
+        <div class="card-tools">
+          <label class="inline">Metric <select id="fMetric"><option value="spend">Spend (₱)</option><option value="leads">Leads</option><option value="clicks">Clicks</option><option value="impressions">Impressions</option></select></label>
+          <button type="button" class="btn btn--line btn--sm" id="tableToggle" aria-expanded="false" aria-controls="chartTable">Show as table</button>
+        </div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="chart" id="chart"></div>
+      <div class="tip" id="tip" role="tooltip" hidden></div>
+      <div id="chartTable" hidden></div>
+    </section>
+
+    <section class="card" aria-labelledby="tableTitle">
+      <div class="card-head"><h2 id="tableTitle">Campaign comparison</h2><p class="hint">Click a column to sort. Sort by <b>Cost per lead</b> to find the lowest-cost campaign.</p></div>
+      <div class="table-wrap"><table id="campTable"><thead><tr>
+        <th scope="col" data-k="campaign" aria-sort="none"><button type="button">Campaign</button></th>
+        <th scope="col" data-k="spend" aria-sort="none"><button type="button">Spend</button></th>
+        <th scope="col" data-k="impressions" aria-sort="none"><button type="button">Impressions</button></th>
+        <th scope="col" data-k="clicks" aria-sort="none"><button type="button">Clicks</button></th>
+        <th scope="col" data-k="leads" aria-sort="none"><button type="button">Leads</button></th>
+        <th scope="col" data-k="ctr" aria-sort="none"><button type="button">CTR</button></th>
+        <th scope="col" data-k="cpl" aria-sort="none"><button type="button">Cost per lead</button></th>
+      </tr></thead><tbody id="campRows"></tbody></table></div>
+    </section>
+
+    <section class="empty" id="empty" hidden>
+      <h2>No results for these filters</h2>
+      <p id="emptyWhy">Nothing matches this combination.</p>
+      <button type="button" class="btn btn--ube" id="emptyReset">Reset filters</button>
+    </section>
+
+    <p class="foot-note">CTR = total clicks &divide; total impressions. Cost per lead = total spend &divide; total leads. &ldquo;&mdash;&rdquo; means the denominator is zero. Every card, the chart, the table and the filtered CSV use the same filtered records.</p>
+  </main>
+  <footer class="foot"><div class="wrap">Ellen&rsquo;s Halo-Halo is a fictional brand and every figure here is <b>Sample Data</b>. Portfolio Demo by ZC Smart Digital.</div></footer>
+
+  <script src="data/data.js"></script>
+  <script src="dash.js"></script>
+  <script src="../_shared/demo-shell.js"></script>
+</body>
+</html>

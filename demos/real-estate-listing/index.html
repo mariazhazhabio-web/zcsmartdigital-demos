@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harbor &amp; Home Realty · Portfolio Demo by ZC Smart Digital</title>
+  <meta name="description" content="Portfolio Demo: a fictional Philippine real estate listing site with filters, inquiry form and a simulated lead tracker.">
+  <link rel="icon" href="assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../_shared/demo-shell.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ZC Smart Digital portfolio frame -->
+  <header class="zc-shell" aria-label="ZC Smart Digital portfolio">
+    <a class="zc-back" href="/#portfolio" data-zc-back>&larr; Back to Demos</a>
+    <span class="zc-brand">ZC Smart Digital <b>&middot;</b> Real Estate Listing Website</span>
+    <span class="zc-labels"><span class="zc-label">Portfolio Demo</span><span class="zc-label zc-label--ghost">Simulated leads</span></span>
+  </header>
+
+  <!-- Demo notice (navy / blue / gold) -->
+  <div class="demo-bar" role="region" aria-label="Portfolio demo notice">
+    <div class="wrap demo-bar__inner">
+      <p><span class="demo-pill">Portfolio Demo</span> <span class="demo-bar__text">Built by <strong>ZC Smart Digital</strong>. The agency, listings and leads are fictional.</span></p>
+      <button type="button" class="demo-bar__btn" id="aboutToggle" aria-expanded="false" aria-controls="aboutPanel">What's simulated?</button>
+    </div>
+    <div class="demo-about" id="aboutPanel" hidden>
+      <div class="wrap">
+        <ul>
+          <li><strong>Fictional business:</strong> Harbor &amp; Home Realty, its six listings, prices and property IDs are made up for this portfolio.</li>
+          <li><strong>Images:</strong> illustrations drawn for the demo, not photos of real properties.</li>
+          <li><strong>Inquiries:</strong> nothing is emailed or sent anywhere. Each inquiry is saved only in <em>this browser</em> (localStorage) and shown in the demo Lead Tracker.</li>
+          <li><strong>No accounts or paid tools:</strong> this is a static site. It runs offline from <code>index.html</code>.</li>
+        </ul>
+        <button type="button" class="btn btn--ghost-light" id="aboutClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="brand" href="#listings" aria-label="Harbor &amp; Home Realty, all listings">
+        <img src="assets/img/logo-mark.svg" alt="" width="40" height="40">
+        <span class="brand__name">Harbor <em>&amp;</em> Home <span>Realty</span></span>
+      </a>
+      <nav class="main-nav" aria-label="Main">
+        <a href="#listings" data-nav="listings">Listings</a>
+        <a href="#tracker" data-nav="tracker"><span class="nav-long">Lead </span>Tracker <span class="badge" id="leadCount">0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- LISTINGS VIEW -->
+    <section class="view" id="view-listings" aria-labelledby="listingsTitle">
+      <div class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Metro Manila homes · Quezon City · Pasig · Taguig</p>
+          <h1 id="listingsTitle" tabindex="-1">Find a home close to everything you love.</h1>
+          <p class="hero__sub">Browse condos, townhouses and houses picked by our local agents. Filter by city, type and budget, then send an inquiry in under a minute.</p>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <form class="filters" id="filters" aria-label="Filter listings" novalidate>
+          <div class="field">
+            <label for="fLocation">Location</label>
+            <select id="fLocation" name="location">
+              <option value="">All locations</option>
+              <option>Quezon City</option>
+              <option>Pasig</option>
+              <option>Taguig</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fType">Property type</label>
+            <select id="fType" name="type">
+              <option value="">All types</option>
+              <option>Condo</option>
+              <option>Townhouse</option>
+              <option>House</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fPrice">Maximum price</label>
+            <select id="fPrice" name="maxPrice">
+              <option value="">No maximum</option>
+              <option value="7000000">Up to ₱7,000,000</option>
+              <option value="10000000">Up to ₱10,000,000</option>
+              <option value="15000000">Up to ₱15,000,000</option>
+              <option value="20000000">Up to ₱20,000,000</option>
+              <option value="30000000">Up to ₱30,000,000</option>
+            </select>
+          </div>
+          <div class="field field--action">
+            <button type="button" class="btn btn--outline" id="clearFilters">Clear filters</button>
+          </div>
+        </form>
+
+        <div class="results-bar"><p class="results-count" id="resultsCount" role="status" aria-live="polite"></p><div class="results-actions"><a class="btn btn--teal btn--sm" href="#tracker">View Demo Lead Tracker</a><a class="btn btn--ghost btn--sm" href="../lead-to-crm/">Open CRM Workflow &rarr;</a></div></div>
+        <div class="grid" id="grid"></div>
+
+        <div class="empty" id="noResults" hidden>
+          <img src="assets/img/empty-state.svg" alt="" width="120" height="120">
+          <h2>No properties match those filters.</h2>
+          <p id="noResultsHint">Try another city, property type or budget.</p>
+          <div class="empty__actions" id="noResultsActions"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETAIL VIEW -->
+    <section class="view" id="view-detail" hidden aria-labelledby="detailTitle">
+      <div class="wrap" id="detailBody"></div>
+    </section>
+
+    <!-- INQUIRY VIEW -->
+    <section class="view" id="view-inquire" hidden aria-labelledby="inquireTitle">
+      <div class="wrap wrap--narrow" id="inquireBody"></div>
+    </section>
+
+    <!-- TRACKER VIEW -->
+    <section class="view" id="view-tracker" hidden aria-labelledby="trackerTitle">
+      <div class="wrap" id="trackerBody"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><strong>Harbor &amp; Home Realty</strong> is a fictional agency created for a ZC Smart Digital portfolio demo. Listings, prices, images and leads are simulated and are not offers or market quotes.</p>
+      <p class="site-footer__small">Portfolio Demo · Sample Campaign · © 2026 ZC Smart Digital · <a href="/#portfolio" data-zc-back>&larr; Back to Demos</a></p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="../_shared/demo-shell.js"></script>
+</body>
+</html>

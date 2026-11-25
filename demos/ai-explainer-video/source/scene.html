@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ZC Smart Digital VA explainer: animation source (1920x1080)</title>
+<!--
+  Source for explainer.mp4. Every frame is drawn by render(t) for t in seconds, so it renders the same every time.
+  Preview in a browser: open this file and press Space to play or pause (R restarts).
+  Render to MP4: see ../README-video.md (tools/render-video.py captures frames at 30 fps, then ffmpeg encodes them).
+-->
+<style>
+  html,body{margin:0;background:#06102a}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:"Poppins","Segoe UI",Arial,sans-serif;color:#fff;
+    background:radial-gradient(circle at 78% 18%,#1d4e89 0%,transparent 45%),radial-gradient(circle at 10% 90%,#12306a 0%,transparent 40%),linear-gradient(160deg,#0b1f3a,#071433)}
+  .abs{position:absolute}
+  .mark{left:64px;top:52px;display:flex;align-items:center;gap:14px;font-weight:700;font-size:26px;letter-spacing:.02em}
+  .mark i{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#D4A63A;color:#0B1F3A;font-style:normal;font-weight:800;font-size:22px}
+  .chip{display:inline-block;padding:10px 22px;border-radius:999px;background:#D4A63A;color:#0B1F3A;font-weight:800;font-size:26px;letter-spacing:.06em;text-transform:uppercase}
+  .h1{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:92px;line-height:1.05}
+  .h1 em{color:#F5D27A;font-style:italic}
+  .p{font-size:36px;color:#c9d6ea;line-height:1.35}
+  .win{background:#fff;color:#1d2433;border-radius:26px;box-shadow:0 40px 90px rgba(0,0,0,.45);overflow:hidden}
+  .bar{height:58px;background:#eef2f8;display:flex;align-items:center;gap:12px;padding:0 24px;font-size:22px;color:#4b5874;font-weight:600}
+  .bar b{width:14px;height:14px;border-radius:50%;display:inline-block}
+  .row{display:flex;align-items:center;gap:18px;padding:18px 24px;border-bottom:1px solid #edf0f5;font-size:26px}
+  .dot{width:16px;height:16px;border-radius:50%;flex:0 0 auto}
+  .tag{font-size:18px;font-weight:700;padding:4px 12px;border-radius:999px}
+  .gold{color:#F5D27A}
+  .btn{display:inline-flex;align-items:center;gap:18px;padding:30px 54px;border-radius:999px;background:#D4A63A;color:#0B1F3A;font-weight:800;font-size:46px;box-shadow:0 14px 0 #8a6a1e}
+  .kpi{background:#f6f8fc;border-radius:20px;padding:24px 28px}
+  .kpi span{display:block;font-size:22px;color:#5b6884;font-weight:600}.kpi strong{font-size:64px;color:#0B1F3A}
+  .cap{left:50%;bottom:58px;transform:translateX(-50%);max-width:1500px;text-align:center;font-size:44px;font-weight:600;line-height:1.3;background:rgba(5,12,30,.82);padding:14px 30px;border-radius:14px}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+var CUES = null; // filled from script.json when previewing with captions (render tool passes ?captions=0)
+var DUR = 42; // length of the animation timeline (before warping)
+var WARP = null; // [[videoTime, animationTime], ...] from script.json: lets scenes follow the narration
+function warpT(t){ if(!WARP) return t; for(var i=1;i<WARP.length;i++){ var a=WARP[i-1], b=WARP[i]; if(t<=b[0]) return a[1]+(t-a[0])*(b[1]-a[1])/(b[0]-a[0]); } return WARP[WARP.length-1][1]; }
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function prog(t,a,b){return clamp((t-a)/(b-a),0,1)}
+function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
+function easeOut(p){return 1-Math.pow(1-p,3)}
+function fade(t,a,b,c,d){ // in a→b, out c→d
+  return Math.min(ease(prog(t,a,b)), d===undefined?1:1-ease(prog(t,c,d)));
+}
+function S(o){return 'opacity:'+o.toFixed(3)+';'}
+function T(x,y,s){return 'transform:translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px) scale('+(s||1).toFixed(3)+');'}
+
+function scene1(t){ // 0 – 6.8  busy Saturday, inquiry missed
+  var o=fade(t,0,.5,6.2,6.8); if(o<=0) return '';
+  var msgs=[["#F28C38","Order #142 · 2 trays pancit","Orders"],["#5BA4E6","Supplier: delivery moved to 2 PM","Suppliers"],["#2E9E6A","GCash payment received · ₱3,450","Payments"],
+    ["#D4A63A","New inquiry: catering for 50 pax on Sunday?","Inquiry"],["#F28C38","Order #143 · 1 tray lumpia","Orders"],["#F28C38","Order #144 · bilao party set","Orders"],["#5BA4E6","Supplier: invoice attached","Suppliers"]];
+  var shown=Math.floor(clamp((t-.6)/.55,0,msgs.length));
+  var rows='';
+  for(var i=shown-1;i>=0;i--){var m=msgs[i], age=t-.6-i*.55, inq=m[2]==="Inquiry", miss=inq&&t>4.2;
+    rows+='<div class="row" style="'+S(Math.min(1,age*3))+(inq?'background:'+(miss?'#fff4f2':'#fff9e8')+';':'')+'"><span class="dot" style="background:'+m[0]+'"></span><div style="flex:1;'+(miss?'color:#9aa3b5;':'')+'">'+m[1]+'</div>'+
+      (inq?(miss?'<span class="tag" style="background:#fde3df;color:#b42318">Unanswered · 3h</span>':'<span class="tag" style="background:#fff0c4;color:#7a5800">New</span>'):'<span class="tag" style="background:#eef2f8;color:#5b6884">'+m[2]+'</span>')+'</div>';}
+  var hour=10+Math.floor(prog(t,.4,6)*4), min=Math.floor((prog(t,.4,6)*240)%60);
+  return '<div class="abs" style="left:110px;top:250px;width:720px;'+S(o)+'">'+
+    '<span class="chip">Saturday rush</span>'+
+    '<div class="h1" style="margin-top:34px">Busy day at<br><em>Rosa’s Catering.</em></div>'+
+    '<p class="p" style="margin-top:30px;'+S(fade(t,3.6,4.2))+'">A new event inquiry<br>slips by unanswered.</p>'+
+    '<div style="margin-top:40px;font-size:40px;font-weight:700;color:#F5D27A">'+(hour>12?hour-12:hour)+':'+String(min).padStart(2,'0')+(hour>=12?' PM':' AM')+'</div></div>'+
+    '<div class="abs win" style="left:930px;top:190px;width:880px;height:660px;'+S(o)+T(0,(1-easeOut(prog(t,0,.8)))*60)+'">'+
+      '<div class="bar"><b style="background:#ef6b5f"></b><b style="background:#f3be4f"></b><b style="background:#62c06f"></b>&nbsp; Rosa’s Catering · Messages <span style="margin-left:auto;background:#b42318;color:#fff;border-radius:999px;padding:2px 14px">'+(12+shown*5)+' unread</span></div>'+rows+'</div>';
+}
+function scene2(t){ // 6.6 – 12.4 meet your VA
+  var o=fade(t,6.6,7.3,11.8,12.4); if(o<=0) return '';
+  var p=easeOut(prog(t,6.8,8)), ring=prog(t,7,9);
+  return '<div class="abs" style="left:0;top:0;width:1920px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;'+S(o)+'">'+
+    '<div style="position:relative;width:300px;height:300px;'+T(0,(1-p)*40,.8+.2*p)+'">'+
+      '<svg viewBox="0 0 300 300" width="300" height="300"><circle cx="150" cy="150" r="140" fill="none" stroke="#D4A63A" stroke-width="10" stroke-dasharray="'+(880*ring)+' 880" transform="rotate(-90 150 150)"/>'+
+      '<circle cx="150" cy="150" r="118" fill="#1d4e89"/><circle cx="150" cy="122" r="44" fill="#F3D2B5"/><path d="M84 238c10-46 40-66 66-66s56 20 66 66" fill="#F5D27A"/>'+
+      '<path d="M100 122a50 50 0 0 1 100 0" fill="none" stroke="#0B1F3A" stroke-width="12" stroke-linecap="round"/><rect x="88" y="112" width="22" height="40" rx="10" fill="#0B1F3A"/><rect x="190" y="112" width="22" height="40" rx="10" fill="#0B1F3A"/><path d="M200 150q0 34-34 38" fill="none" stroke="#0B1F3A" stroke-width="6"/><circle cx="164" cy="188" r="8" fill="#0B1F3A"/></svg></div>'+
+    '<div class="h1" style="margin-top:44px;text-align:center;font-size:84px">Meet your <em>virtual assistant</em></div>'+
+    '<p class="p" style="margin-top:24px;text-align:center;'+S(fade(t,9.4,10))+'">Managed by ZC Smart Digital · trained for your business</p></div>';
+}
+function label(n,txt,t,a){ var o=fade(t,a,a+.5); return '<div class="abs" style="left:110px;top:150px;'+S(o)+'"><span class="chip">'+n+'</span><div class="h1" style="font-size:76px;margin-top:26px">'+txt+'</div></div>'; }
+function scene3(t){ // 12.4 – 20.2 inbox organized
+  var o=fade(t,12.4,13,19.6,20.2); if(o<=0) return '';
+  var p=prog(t,13.2,16.4), unread=Math.round(47*(1-ease(p)));
+  var folders=[["Inquiries","#D4A63A",Math.round(6*ease(p))],["Orders","#F28C38",Math.round(23*ease(p))],["Payments","#2E9E6A",Math.round(11*ease(p))],["Suppliers","#5BA4E6",Math.round(7*ease(p))]];
+  var draft=prog(t,16.2,19.2), msg="Hi Ms. Santos! Yes, we can cater 50 pax this Sunday. Here’s our party menu and a quick quote…", typed=msg.slice(0,Math.floor(msg.length*draft));
+  return '<div style="'+S(o)+'">'+label("1 · Inbox organized","Every message,<br><em>sorted.</em>",t,12.6)+
+    '<div class="abs win" style="left:860px;top:150px;width:950px;height:720px;'+T((1-easeOut(prog(t,12.4,13.2)))*80,0)+'">'+
+      '<div class="bar">Rosa’s Catering · Inbox <span style="margin-left:auto;background:'+(unread?'#b42318':'#2E9E6A')+';color:#fff;border-radius:999px;padding:2px 14px">'+(unread?unread+' unread':'Inbox zero ✓')+'</span></div>'+
+      '<div style="display:grid;grid-template-columns:300px 1fr;height:662px">'+
+        '<div style="background:#f6f8fc;padding:20px">'+folders.map(function(f){return '<div style="display:flex;align-items:center;gap:14px;padding:16px 14px;font-size:26px;font-weight:600;border-radius:12px;'+(f[0]==="Inquiries"&&p>.4?'background:#fff6da;':'')+'"><span class="dot" style="background:'+f[1]+'"></span>'+f[0]+'<b style="margin-left:auto;color:#5b6884">'+f[2]+'</b></div>';}).join('')+'</div>'+
+        '<div style="padding:26px 30px">'+
+          '<div style="font-size:22px;color:#5b6884;font-weight:600">INQUIRY · flagged by your VA</div>'+
+          '<div style="font-size:32px;font-weight:700;margin:8px 0 18px">Catering for 50 pax on Sunday?</div>'+
+          '<div style="background:#f6f8fc;border-radius:16px;padding:20px;font-size:25px;color:#46516b">Hello! We’re planning a family reunion this Sunday for about 50 guests. Are you available? — Ms. Santos</div>'+
+          '<div style="margin-top:22px;border:2px solid #D4A63A;border-radius:16px;padding:20px;min-height:170px;font-size:25px;'+S(fade(t,15.9,16.3))+'"><div style="font-size:20px;font-weight:800;color:#9C7526;margin-bottom:8px">REPLY DRAFTED BY YOUR VA</div>'+typed+(draft<1?'<span style="color:#D4A63A">▍</span>':'')+'</div>'+
+        '</div></div></div></div>';
+}
+function scene4(t){ // 20.2 – 28 calendar
+  var o=fade(t,20.2,20.8,27.4,28); if(o<=0) return '';
+  var days=["Mon","Tue","Wed","Thu","Fri"], hours=["10 AM","12 PM","2 PM","4 PM"], drop=easeOut(prog(t,21.4,22.6)), ok=fade(t,23.4,23.8), rem=fade(t,24.6,25);
+  var grid='';
+  for(var r=0;r<4;r++) for(var c=0;c<5;c++) grid+='<div style="border:1px solid #edf0f5;height:118px"></div>';
+  var busy=[[0,0,"Deliveries"],[2,1,"Supplier call"],[3,2,"Wedding prep"],[4,0,"Market run"]].map(function(b){return '<div style="position:absolute;left:'+(130+b[0]*150+6)+'px;top:'+(66+b[1]*118+8)+'px;width:138px;height:100px;background:#eef2f8;border-radius:12px;padding:10px;font-size:19px;color:#5b6884;font-weight:600">'+b[2]+'</div>';}).join('');
+  var evY=66+2*118+8;
+  return '<div style="'+S(o)+'">'+label("2 · Appointment scheduled","Bookings,<br><em>handled.</em>",t,20.4)+
+    '<div class="abs win" style="left:860px;top:150px;width:950px;height:640px;'+T((1-easeOut(prog(t,20.2,21)))*80,0)+'">'+
+      '<div class="bar">Calendar · next week</div>'+
+      '<div style="position:relative;padding:0 30px 0 0">'+
+        '<div style="display:grid;grid-template-columns:130px repeat(5,150px);font-size:22px;font-weight:700;color:#5b6884;height:66px;align-items:center"><div></div>'+days.map(function(d){return '<div style="text-align:center">'+d+'</div>';}).join('')+'</div>'+
+        '<div style="display:grid;grid-template-columns:130px repeat(5,150px)">'+hours.map(function(h,i){return '<div style="grid-column:1;grid-row:'+(i+1)+';height:118px;font-size:20px;color:#8a94ab;padding:8px 12px">'+h+'</div>';}).join('')+'<div style="grid-column:2/7;grid-row:1/5;display:grid;grid-template-columns:repeat(5,150px)">'+grid+'</div></div>'+
+        busy+
+        '<div style="position:absolute;left:'+(130+150+6)+'px;top:'+(evY-(1-drop)*260)+'px;width:138px;height:100px;background:#D4A63A;color:#0B1F3A;border-radius:12px;padding:10px;font-size:19px;font-weight:800;'+S(drop)+'box-shadow:0 10px 24px rgba(212,166,58,.5)">Tasting · Santos family<br><span style="font-weight:600">Tue 2:00 PM</span></div>'+
+      '</div></div>'+
+    '<div class="abs" style="left:860px;top:820px;display:flex;gap:20px">'+
+      '<span class="chip" style="background:#2E9E6A;color:#fff;'+S(ok)+'">✓ Confirmed with client</span>'+
+      '<span class="chip" style="background:#1d4e89;color:#fff;'+S(rem)+'">Reminder sent</span></div></div>';
+}
+function scene5(t){ // 28 – 35.2 weekly report
+  var o=fade(t,28,28.6,34.6,35.2); if(o<=0) return '';
+  var p=ease(prog(t,28.8,31.4)), bars=[3,2,4,2,3,1,3];
+  return '<div style="'+S(o)+'">'+label("3 · Weekly report ready","Your week,<br><em>at a glance.</em>",t,28.2)+
+    '<div class="abs win" style="left:860px;top:150px;width:950px;height:690px;'+T((1-easeOut(prog(t,28,28.8)))*80,0)+'">'+
+      '<div class="bar">Weekly report · Rosa’s Catering <span class="tag" style="margin-left:auto;background:#fff0c4;color:#7a5800">Sample data</span></div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:28px">'+
+        '<div class="kpi"><span>Inquiries handled</span><strong>'+Math.round(18*p)+'</strong></div>'+
+        '<div class="kpi"><span>Bookings confirmed</span><strong>'+Math.round(7*p)+'</strong></div>'+
+        '<div class="kpi"><span>Avg. first reply</span><strong>'+Math.round(12*p)+'<small style="font-size:30px"> min</small></strong></div></div>'+
+      '<div style="padding:0 40px"><div style="font-size:22px;font-weight:700;color:#5b6884;margin-bottom:12px">Inquiries per day</div>'+
+        '<div style="display:flex;align-items:flex-end;gap:26px;height:300px;border-bottom:3px solid #d6dbe6">'+bars.map(function(v,i){var bp=ease(prog(t,29+i*.18,30.2+i*.18));return '<div style="flex:1;text-align:center"><div style="height:'+(v*62*bp)+'px;background:'+(i===2?'#D4A63A':'#1d4e89')+';border-radius:8px 8px 0 0"></div></div>';}).join('')+'</div>'+
+        '<div style="display:flex;gap:26px;margin-top:10px">'+["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(function(d){return '<div style="flex:1;text-align:center;font-size:20px;color:#8a94ab">'+d+'</div>';}).join('')+'</div></div></div></div>';
+}
+function scene6(t){ // 35 – 42 CTA
+  var o=fade(t,35,35.8); if(o<=0) return '';
+  var b=easeOut(prog(t,36.4,37.4)), pulse=1+.025*Math.sin(Math.max(0,t-37.4)*5);
+  return '<div class="abs" style="left:0;top:0;width:1920px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;'+S(o)+'">'+
+    '<div class="h1" style="font-size:104px">Get your time <em>back.</em></div>'+
+    '<p class="p" style="margin-top:22px">Managed virtual assistants for small businesses</p>'+
+    '<div style="margin-top:60px;'+S(b)+T(0,(1-b)*40,pulse)+'"><span class="btn"><svg width="44" height="44" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="#0B1F3A" stroke-width="2.4"/><path d="M3 10h18M8 3v4M16 3v4" stroke="#0B1F3A" stroke-width="2.4" stroke-linecap="round"/></svg>Book a Free Consultation</span></div>'+
+    '<div style="margin-top:58px;font-size:56px;font-weight:700;letter-spacing:.02em;'+S(fade(t,37.6,38.3))+'">zcsmartdigital<span class="gold">.com</span></div></div>';
+}
+function captionAt(t){ if(!CUES) return ''; for(var i=0;i<CUES.length;i++){var c=CUES[i]; if(t>=c.start&&t<c.end) return '<div class="abs cap">'+c.text+'</div>';} return ''; }
+function render(vt){
+  var t=warpT(vt);
+  document.getElementById('stage').innerHTML='<div class="abs mark"><i>ZC</i>ZC Smart Digital</div>'+scene1(t)+scene2(t)+scene3(t)+scene4(t)+scene5(t)+scene6(t)+captionAt(vt);
+}
+window.render=render; window.DUR=DUR;
+// interactive preview (Space = play/pause, R = restart)
+(function(){
+  var playing=false,t0=0,base=0,raf;
+  if(location.search.indexOf('captions=0')<0){ try{ fetch('script.json').then(function(r){return r.json()}).then(function(j){CUES=j.cues;WARP=j.warp||null;DUR=j.duration_s||DUR;render(base)}).catch(function(){}); }catch(e){} }
+  function loop(now){ var t=base+(now-t0)/1000; if(t>=DUR){t=DUR;playing=false;} render(t); if(playing) raf=requestAnimationFrame(loop); else base=t; }
+  document.addEventListener('keydown',function(e){ if(e.code==='Space'){e.preventDefault(); if(playing){playing=false;cancelAnimationFrame(raf);base=Math.min(DUR,base+(performance.now()-t0)/1000);render(base);} else {if(base>=DUR)base=0;playing=true;t0=performance.now();raf=requestAnimationFrame(loop);} } if(e.key==='r'||e.key==='R'){base=0;render(0);} });
+  render(0);
+})();
+</script>
+</body>
+</html>

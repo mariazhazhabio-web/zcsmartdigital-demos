@@ -1,0 +1,57 @@
+/* Ellen's Halo-Halo report — sample business styling (cream, ube, soft gold) */
+:root{--cream:#FBF3E4;--cream-2:#F4E6CC;--ube:#5B2A86;--ube-d:#3F1D5C;--ube-m:#7A45A8;--lav:#E8DCF4;--gold:#D8B25A;--gold-d:#9C7526;--ink:#2E2236;--muted:#6B5D73;--line:#E7DAC4;--surface:#fffdf8;
+  --s-fb:#6B3FA0;--s-ig:#C98A12}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--cream)}
+[hidden]{display:none!important}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{width:min(1180px,100% - 2rem);margin-inline:auto}
+h1,h2{font-family:Georgia,"Times New Roman",serif;color:var(--ube-d);line-height:1.2}
+.head{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:flex-end;padding:1.6rem 0 1rem}
+.eyebrow{margin:0;text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;font-weight:800;color:var(--gold-d)}
+.head h1{margin:.2rem 0 .4rem;font-size:clamp(1.6rem,3.4vw,2.3rem)}.head h1 em{color:var(--ube-m)}
+.sub{margin:0;color:var(--muted);max-width:75ch}
+.badge{display:inline-block;background:var(--ube);color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .55rem;border-radius:99px;margin-right:.3rem}
+.downloads{display:flex;gap:.5rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.5rem 1rem;border-radius:10px;border:2px solid transparent;font-family:inherit;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none}
+.btn--sm{min-height:36px;padding:.3rem .75rem;font-size:.85rem}
+.btn--ube{background:var(--ube);color:#fff}.btn--ube:hover{background:var(--ube-d)}
+.btn--line{background:#fff;color:var(--ube-d);border-color:var(--line)}.btn--line:hover{border-color:var(--ube-m)}
+.filters{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1.4fr auto;gap:.7rem;align-items:end;background:#fff;border:1px solid var(--line);border-radius:14px;padding:.9rem}
+.filters label,.inline{display:flex;flex-direction:column;gap:.25rem;font-size:.8rem;font-weight:700;color:var(--muted)}
+.inline{flex-direction:row;align-items:center;gap:.4rem}
+select,input{font:inherit;font-size:.92rem;min-height:42px;padding:.4rem .55rem;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+.inline select{width:auto}
+select:focus,input:focus{border-color:var(--ube-m);outline:none;box-shadow:0 0 0 3px rgba(122,69,168,.18)}
+.status{margin:.7rem 0;color:var(--muted);font-weight:600;font-size:.9rem}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:.7rem;margin-bottom:1rem}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem}
+.kpi span{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.kpi strong{display:block;font-size:1.45rem;color:var(--ube-d);font-variant-numeric:tabular-nums;margin-top:.15rem;white-space:nowrap}
+.kpi small{color:var(--muted);font-size:.75rem}
+.kpi--hero{background:var(--ube);border-color:var(--ube)}.kpi--hero span,.kpi--hero small{color:var(--lav)}.kpi--hero strong{color:#fff}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1rem;position:relative}
+.card-head{display:flex;flex-wrap:wrap;gap:.5rem 1rem;justify-content:space-between;align-items:center}
+.card-head h2{margin:0;font-size:1.2rem}.card-tools{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.hint{margin:0;color:var(--muted);font-size:.85rem}
+.legend{display:flex;gap:1rem;margin:.7rem 0 .2rem;font-size:.85rem;color:var(--ink)}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .grid line{stroke:#ece3d3}.chart .axis text{fill:#6B5D73;font-size:12px}
+.chart .val{fill:#2E2236;font-size:12px;font-weight:700}
+.chart .bar{cursor:pointer}.chart .bar:focus{outline:none}.chart .bar:focus rect,.chart .bar:hover rect{stroke:#2E2236;stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:#2E2236;color:#fff;padding:.5rem .65rem;border-radius:8px;font-size:.82rem;line-height:1.35;white-space:nowrap;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.tip b{color:#F5D27A}
+.table-wrap{overflow:auto;margin-top:.6rem;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:640px;font-variant-numeric:tabular-nums}
+th,td{padding:.6rem .7rem;text-align:right;border-bottom:1px solid #f0e7d7;font-size:.9rem}
+th:first-child,td:first-child{text-align:left}
+th{background:var(--cream-2);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ube-d)}
+th button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:.2rem 0;min-height:32px;text-transform:inherit;letter-spacing:inherit;font-weight:800}
+th[aria-sort=ascending] button::after{content:" \25B2"}th[aria-sort=descending] button::after{content:" \25BC"}
+tbody tr:hover{background:#fbf6ec}
+.best{display:inline-block;background:#E5F3EA;color:#1F6B3B;border:1px solid #9cc8ab;font-size:.68rem;font-weight:800;border-radius:99px;padding:0 .45rem;margin-left:.35rem;vertical-align:middle;text-transform:uppercase;letter-spacing:.04em}
+.plats{display:block;color:var(--muted);font-size:.78rem}
+.empty{background:#fff;border:2px dashed var(--line);border-radius:14px;text-align:center;padding:2rem 1rem;margin-bottom:1rem}.empty p{color:var(--muted)}
+.foot-note{color:var(--muted);font-size:.82rem;margin:0 0 2rem}
+.foot{background:var(--ube-d);color:var(--lav);padding:1.2rem 0;font-size:.85rem}
+@media (max-width:1000px){.filters{grid-template-columns:repeat(3,1fr)}.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.filters{grid-template-columns:1fr 1fr}.filters label:first-child,.filters #resetBtn{grid-column:1/-1}.kpis{grid-template-columns:1fr 1fr}.kpi strong{font-size:1.2rem}.downloads{width:100%}.downloads .btn{flex:1}}

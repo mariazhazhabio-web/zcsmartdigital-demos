@@ -1,0 +1,13 @@
+/* ZC Smart Digital — shared frame for every portfolio demo page (navy / blue / gold).
+   Each sample business styles its own content below this bar. */
+.zc-shell{position:relative;z-index:60;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;padding:.55rem max(1rem,calc((100% - 1180px)/2));background:linear-gradient(90deg,#0B1F3A,#1D4E89);color:#E6EEFB;font:500 14px/1.4 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+.zc-shell a.zc-back{display:inline-flex;align-items:center;gap:.35rem;min-height:36px;padding:.3rem .85rem;border-radius:999px;border:1px solid #D4A63A;color:#F5D27A;text-decoration:none;font-weight:700;white-space:nowrap}
+.zc-shell a.zc-back:hover{background:rgba(212,166,58,.18)}
+.zc-shell a.zc-back:focus-visible{outline:3px solid #F5D27A;outline-offset:2px}
+.zc-shell .zc-brand{font-weight:700;color:#fff;letter-spacing:.01em}
+.zc-shell .zc-brand b{color:#F5D27A}
+.zc-shell .zc-labels{margin-left:auto;display:flex;gap:.4rem;flex-wrap:wrap}
+.zc-shell .zc-label{background:#D4A63A;color:#0B1F3A;font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:999px}
+.zc-shell .zc-label--ghost{background:transparent;color:#F5D27A;border:1px solid rgba(245,210,122,.6)}
+@media (max-width:560px){.zc-shell{gap:.5rem}.zc-shell .zc-brand{display:none}.zc-shell .zc-labels{margin-left:auto}}
+@media print{.zc-shell{display:none}}

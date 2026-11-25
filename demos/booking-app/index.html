@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumi Beauty Studio · Booking App · Portfolio Demo by ZC Smart Digital</title>
+  <meta name="description" content="Portfolio Demo: mobile-first appointment booking with simulated availability in Philippine time.">
+  <link rel="icon" href="assets/lumi-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../_shared/demo-shell.css">
+  <link rel="stylesheet" href="booking.css">
+</head>
+<body>
+  <header class="zc-shell" aria-label="ZC Smart Digital portfolio">
+    <a class="zc-back" href="/#portfolio" data-zc-back>&larr; Back to Demos</a>
+    <span class="zc-brand">ZC Smart Digital <b>&middot;</b> Booking App Interface</span>
+    <span class="zc-labels"><span class="zc-label">Portfolio Demo</span><span class="zc-label zc-label--ghost">Simulated availability</span></span>
+  </header>
+
+  <div class="stage">
+    <aside class="side" aria-label="About this demo">
+      <h1>A booking flow clients finish on their phones.</h1>
+      <p>Lumi Beauty Studio is a fictional skin studio. Pick a service, a time in Philippine time, add sample details and confirm. Bookings stay in this browser, block overlapping times and can be cancelled to release the slot.</p>
+      <ul>
+        <li>4 steps with back &amp; edit</li>
+        <li>Slots generated for the next 14 days (simulated)</li>
+        <li>Overlap protection for 15- and 30-minute services</li>
+        <li>Sample confirmation email preview, nothing is sent</li>
+      </ul>
+    </aside>
+
+    <div class="phone" id="app">
+      <header class="app-bar">
+        <div class="logo"><img src="assets/lumi-mark.svg" alt="" width="34" height="34"><div><strong>Lumi</strong><span>Beauty Studio</span></div></div>
+        <button type="button" class="pill-btn" id="myBtn" aria-controls="view-my">My bookings <span class="count" id="myCount">0</span></button>
+      </header>
+
+      <!-- BOOKING FLOW -->
+      <section id="view-book" aria-labelledby="stepTitle">
+        <ol class="stepper" id="stepper" aria-label="Booking steps">
+          <li data-s="1"><span>1</span>Service</li><li data-s="2"><span>2</span>Date &amp; time</li><li data-s="3"><span>3</span>Details</li><li data-s="4"><span>4</span>Review</li>
+        </ol>
+        <div class="screen" id="screen" tabindex="-1"></div>
+      </section>
+
+      <!-- MY BOOKINGS -->
+      <section id="view-my" hidden aria-labelledby="myTitle">
+        <div class="screen">
+          <button type="button" class="link-back" id="myBack">&larr; Back to booking</button>
+          <h2 id="myTitle" tabindex="-1">My bookings</h2>
+          <p class="note">Saved in this browser only &middot; demo bookings</p>
+          <div id="myList"></div>
+          <div class="danger-zone">
+            <button type="button" class="btn btn--line-danger" id="resetBtn">Reset all demo bookings</button>
+            <div class="confirm-inline" id="resetAsk" hidden><p>Delete every demo booking in this browser?</p><button type="button" class="btn btn--danger" id="resetYes">Yes, reset</button><button type="button" class="btn btn--ghost" id="resetNo">Keep them</button></div>
+          </div>
+        </div>
+      </section>
+      <p class="fine">Lumi Beauty Studio is fictional. Times shown in Philippine Time (PHT, UTC+8). Availability is simulated.</p>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="booking.js"></script>
+  <script src="../_shared/demo-shell.js"></script>
+</body>
+</html>

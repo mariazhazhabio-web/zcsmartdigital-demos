@@ -1,0 +1,125 @@
+{
+ "title": "ZC Smart Digital: Managed Virtual Assistant Service (explainer)",
+ "duration_s": 44.97,
+ "note": "Rosa's Catering is a fictional sample business. Narration: ElevenLabs voice 'Mel - Warm & Conversational' (Filipino English accent), take 2, pauses tightened and sped up 6%. 'warp' maps video time to the original animation timeline so scenes follow the voice.",
+ "cues": [
+  {
+   "start": 0.4,
+   "end": 3.02,
+   "text": "It's a busy Saturday at Rosa's Catering."
+  },
+  {
+   "start": 3.12,
+   "end": 7.43,
+   "text": "Orders keep coming, and a new event inquiry slips by unanswered."
+  },
+  {
+   "start": 7.53,
+   "end": 11.53,
+   "text": "That's where a ZC Smart Digital virtual assistant steps in."
+  },
+  {
+   "start": 11.63,
+   "end": 14.55,
+   "text": "Managed, trained and ready for your business."
+  },
+  {
+   "start": 14.65,
+   "end": 20.15,
+   "text": "First, your inbox. Your VA sorts every message and flags new inquiries,"
+  },
+  {
+   "start": 20.2,
+   "end": 24.43,
+   "text": "then drafts a friendly reply in your tone, so no customer waits."
+  },
+  {
+   "start": 24.53,
+   "end": 28.31,
+   "text": "Next, your calendar. Appointments get booked and confirmed,"
+  },
+  {
+   "start": 28.36,
+   "end": 31.2,
+   "text": "with reminders sent, and no more back-and-forth."
+  },
+  {
+   "start": 31.3,
+   "end": 33.96,
+   "text": "And every Friday, a clear weekly report"
+  },
+  {
+   "start": 34.01,
+   "end": 37.11,
+   "text": "shows your inquiries, bookings and response times."
+  },
+  {
+   "start": 37.21,
+   "end": 40.22,
+   "text": "Get your time back with a managed virtual assistant."
+  },
+  {
+   "start": 40.32,
+   "end": 43.82,
+   "text": "Book a free consultation at zcsmartdigital.com."
+  }
+ ],
+ "warp": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   0.4,
+   0.4
+  ],
+  [
+   3.12,
+   3.5
+  ],
+  [
+   7.53,
+   7.0
+  ],
+  [
+   11.63,
+   9.7
+  ],
+  [
+   14.65,
+   12.6
+  ],
+  [
+   20.2,
+   16.1
+  ],
+  [
+   24.53,
+   20.4
+  ],
+  [
+   28.36,
+   23.9
+  ],
+  [
+   31.3,
+   28.2
+  ],
+  [
+   34.01,
+   31.7
+  ],
+  [
+   37.21,
+   35.3
+  ],
+  [
+   40.32,
+   38.5
+  ],
+  [
+   44.97,
+   42.0
+  ]
+ ]
+}

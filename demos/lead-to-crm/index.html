@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lead-to-CRM Workflow · Harbor &amp; Home Realty · Portfolio Demo by ZC Smart Digital</title>
+  <meta name="description" content="Portfolio Demo: website inquiries matched to CRM contacts and deals, with simulated acknowledgment email and internal alert previews.">
+  <link rel="icon" href="../real-estate-listing/assets/img/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../_shared/demo-shell.css">
+  <link rel="stylesheet" href="crm.css">
+</head>
+<body>
+  <header class="zc-shell" aria-label="ZC Smart Digital portfolio">
+    <a class="zc-back" href="/#portfolio" data-zc-back>&larr; Back to Demos</a>
+    <span class="zc-brand">ZC Smart Digital <b>&middot;</b> Lead-to-CRM Workflow</span>
+    <span class="zc-labels"><span class="zc-label">Portfolio Demo</span><span class="zc-label zc-label--ghost">Simulated messages</span></span>
+  </header>
+
+  <div class="app-head">
+    <div class="wrap app-head__inner">
+      <div class="brand"><img src="../real-estate-listing/assets/img/logo-mark.svg" alt="" width="40" height="40"><div><p class="brand__name">Harbor <em>&amp;</em> Home <span>CRM</span></p><p class="brand__sub">Inquiry → contact → deal → follow-up, automated</p></div></div>
+      <div class="head-actions">
+        <a class="btn btn--ghost" href="../real-estate-listing/">&larr; Listing website</a>
+        <a class="btn btn--ghost" href="../real-estate-listing/#tracker">Listing lead tracker</a>
+        <button type="button" class="btn btn--danger" id="resetBtn">Reset demo data</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="confirm-bar" id="resetConfirm" role="alertdialog" aria-labelledby="resetQ" hidden>
+      <p id="resetQ">Delete every demo inquiry saved in this browser? This also clears the listing site's lead tracker.</p>
+      <button type="button" class="btn btn--danger-solid" id="resetYes">Yes, reset</button>
+      <button type="button" class="btn btn--ghost" id="resetNo">Cancel</button>
+    </div>
+    <p class="intro">Inquiries from the <a href="../real-estate-listing/">Harbor &amp; Home listing website</a> and from the form below land here, in the same browser. Each one runs the workflow: emails are normalized, the contact is matched or created, the deal for that contact and property is created or updated, then an acknowledgment and an internal alert are <strong>previewed, never sent</strong>.</p>
+  </div>
+
+  <main class="wrap grid" id="main">
+    <!-- Inquiry form -->
+    <section class="panel" aria-labelledby="formTitle">
+      <h2 id="formTitle">New website inquiry</h2>
+      <p class="muted">Start here, or submit from a listing page. Saved only in this browser.</p>
+      <form id="inqForm" novalidate>
+        <div class="err-summary" id="errSummary" tabindex="-1" hidden></div>
+        <label class="field"><span>Property <b class="req">*</b></span><select id="fProp" name="property"></select><em class="err" id="fProp-err"></em></label>
+        <label class="field"><span>Full name <b class="req">*</b></span><input id="fName" name="name" autocomplete="name"><em class="err" id="fName-err"></em></label>
+        <label class="field"><span>Email <b class="req">*</b></span><input id="fEmail" name="email" type="email" autocomplete="email"><em class="err" id="fEmail-err"></em></label>
+        <label class="field"><span>Mobile <b class="req">*</b></span><input id="fMobile" name="mobile" type="tel" placeholder="0917 123 4567" autocomplete="tel"><em class="err" id="fMobile-err"></em></label>
+        <label class="field"><span>Message</span><textarea id="fMsg" name="message" rows="3"></textarea></label>
+        <div class="form-actions">
+          <button type="button" class="btn btn--sample" id="sampleBtn">Use Sample Details</button>
+          <button type="submit" class="btn btn--primary">Submit Inquiry</button>
+        </div>
+        <p class="hint">Sample details use mixed-case email with spaces on purpose, to show email normalization.</p>
+      </form>
+    </section>
+
+    <!-- Workflow run -->
+    <section class="panel" aria-labelledby="runTitle">
+      <div class="panel-head"><h2 id="runTitle">Workflow run</h2><button type="button" class="btn btn--ghost btn--sm" id="replayBtn" disabled>Replay last run</button></div>
+      <p class="muted" id="runFor">Waiting for an inquiry…</p>
+      <ol class="steps" id="steps"></ol>
+    </section>
+
+    <!-- Previews -->
+    <section class="panel span-2" aria-labelledby="prevTitle">
+      <div class="panel-head"><h2 id="prevTitle">Message previews</h2><label class="inline">For deal <select id="prevDeal"></select></label></div>
+      <div class="previews">
+        <article class="email" aria-label="Acknowledgment email preview">
+          <p class="sim">Simulated email · not sent</p>
+          <div id="emailPrev"></div>
+        </article>
+        <article class="alert" aria-label="Internal alert preview">
+          <p class="sim">Simulated internal alert · not sent</p>
+          <div id="alertPrev"></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpis span-2" aria-label="CRM totals" id="kpis"></section>
+
+    <!-- Contacts -->
+    <section class="panel span-2" aria-labelledby="contactsTitle">
+      <div class="panel-head"><h2 id="contactsTitle">Contacts</h2><label class="inline check"><input type="checkbox" id="showSample" checked> Show sample records</label></div>
+      <div class="table-wrap"><table><thead><tr><th>Contact</th><th>Email (normalized)</th><th>Deals</th><th>Inquiries</th><th>Last activity</th></tr></thead><tbody id="contactRows"></tbody></table></div>
+    </section>
+
+    <!-- Deals -->
+    <section class="panel span-2" aria-labelledby="dealsTitle">
+      <div class="panel-head"><h2 id="dealsTitle">Deals · stage: <span class="stage">New Inquiry</span></h2></div>
+      <div class="deals" id="deals"></div>
+    </section>
+
+    <!-- Activity -->
+    <section class="panel span-2" aria-labelledby="actTitle">
+      <h2 id="actTitle">Activity log</h2>
+      <ol class="activity" id="activity"></ol>
+    </section>
+  </main>
+
+  <footer class="foot"><div class="wrap">Harbor &amp; Home Realty is fictional. Contacts, deals and messages are <strong>sample data</strong> generated in this browser; no CRM, email or chat account is connected. Portfolio Demo by ZC Smart Digital.</div></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="../real-estate-listing/js/data.js"></script>
+  <script src="crm.js"></script>
+  <script src="../_shared/demo-shell.js"></script>
+</body>
+</html>
