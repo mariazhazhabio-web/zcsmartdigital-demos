@@ -1,0 +1,14 @@
+{
+  // Serves the home page (/) and everything under /demos/ on zcsmartdigital.com and www,
+  // through zone routes that take priority over yellow-smoke-77ca. Same files: run ..\deploy.ps1,
+  // which first copies the site files into .wrangler\site.
+  "name": "blue-hill-dc43",
+  "compatibility_date": "2026-11-20",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../.wrangler/site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

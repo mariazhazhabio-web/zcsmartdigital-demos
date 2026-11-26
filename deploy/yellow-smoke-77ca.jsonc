@@ -1,0 +1,13 @@
+{
+  // Serves most of zcsmartdigital.com (custom domain): styles, scripts, service pages, privacy, 404.
+  // Static files only. Run ..\deploy.ps1, which first copies the site files into .wrangler\site.
+  "name": "yellow-smoke-77ca",
+  "compatibility_date": "2026-11-19",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../.wrangler/site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
