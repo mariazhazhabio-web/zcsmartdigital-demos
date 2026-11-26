@@ -65,6 +65,7 @@ table{width:100%;border-collapse:collapse;min-width:560px}th,td{text-align:left;
 th{background:var(--sand);color:var(--teal);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
 td .sub{display:block;color:var(--muted);font-size:.8rem}
 .tag{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.04em;padding:.05rem .45rem;border-radius:99px;margin-left:.3rem;vertical-align:middle}
+.tag--ai{margin-left:0;background:#e8eef1;color:#46565d}.tag--ai-Hot{background:#fde7df;color:var(--terra-d)}.tag--ai-Warm{background:#fff7e0;color:#6b4e00}
 .tag--sample{background:#eef1f3;color:#56646b;border:1px solid #cfd8dc}.tag--new{background:#fde7df;color:var(--terra-d)}
 /* deals */
 .deals{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem}

@@ -67,6 +67,7 @@
       activity.push({ t: ev.submittedAt, sample: ev.sample, what: "Inquiry received", detail: who + " · " + pid + " · via " + esc(ev.source || "Listing website") + " · " + esc(ev.ref) });
       activity.push({ t: ev.submittedAt, sample: ev.sample, what: r.contact === "created" ? "Contact created" : "Contact matched by email", detail: esc(c.id) + " · " + esc(key) });
       activity.push({ t: ev.submittedAt, sample: ev.sample, what: r.deal === "created" ? "Deal created · New Inquiry" : "Repeat inquiry added to deal", detail: esc(d.id) + " · " + pid + (r.deal === "updated" ? " · inquiry #" + r.n : "") });
+      if (ev.aiScore != null) { d.aiScore = ev.aiScore; d.aiTier = ev.aiTier; activity.push({ t: ev.submittedAt, sample: ev.sample, what: "AI lead score attached · " + esc(ev.aiTier), detail: esc(d.id) + " · " + esc(ev.aiScore) + "/100 from the AI chat assistant" }); }
       activity.push({ t: ev.submittedAt, sample: ev.sample, what: "Acknowledgment email preview generated", detail: "Simulated, not sent · to " + esc(key) });
       activity.push({ t: ev.submittedAt, sample: ev.sample, what: "Internal alert preview generated", detail: "Simulated, not sent · #sales-alerts" });
     });
@@ -89,7 +90,7 @@
     return '<p class="chan"># sales-alerts · Harbor &amp; Home</p><div class="msg"><p><b>' + (d.events.length > 1 ? "Repeat inquiry (#" + d.events.length + ")" : "New inquiry") + "</b> · " + esc(fmt(ev.submittedAt)) + "</p>" +
       "<p><b>Prospect:</b> " + esc(ev.prospect) + " · " + esc(d.email) + " · " + esc(ev.mobile) + "</p>" +
       "<p><b>Property:</b> " + esc(p.id) + " · " + esc(p.name) + "</p><p><b>Price / area:</b> " + peso(p.price) + " · " + esc(p.area) + ", " + esc(p.location) + "</p>" +
-      "<p><b>CRM:</b> " + esc(d.contactId) + " · " + esc(d.id) + " · stage New Inquiry</p><p><b>Message:</b> " + esc(ev.message || "—") + "</p></div>";
+      "<p><b>CRM:</b> " + esc(d.contactId) + " · " + esc(d.id) + " · stage New Inquiry</p>" + (ev.aiScore != null ? "<p><b>AI lead score:</b> " + esc(ev.aiScore) + "/100 · " + esc(ev.aiTier) + "</p>" : "") + "<p><b>Message:</b> " + esc(ev.message || "—") + "</p></div>";
   }
 
   /* ---------- rendering ---------- */
@@ -107,7 +108,7 @@
     }).join("") : '<tr><td colspan="5" class="empty">No contacts yet. Submit an inquiry to create one.</td></tr>';
     $("#deals").innerHTML = model.deals.length ? model.deals.slice().reverse().map(function (d) {
       return '<article class="deal" data-deal="' + esc(d.id) + '" data-pid="' + esc(d.prop.id) + '" data-email="' + esc(d.email) + '"><p class="pid">' + esc(d.id) + " · " + esc(d.prop.id) + (d.sample ? ' <span class="tag tag--sample">Sample</span>' : "") + "</p><h3>" + esc(d.prop.name) + "</h3>" +
-        "<p style=\"margin:.2rem 0\">" + esc(d.contactName) + ' · <span class="amt">' + peso(d.prop.price) + '</span></p><span class="stagechip">New Inquiry</span> <span class="sub">' + d.events.length + " inquir" + (d.events.length > 1 ? "ies" : "y") + "</span>" +
+        "<p style=\"margin:.2rem 0\">" + esc(d.contactName) + ' · <span class="amt">' + peso(d.prop.price) + '</span></p><span class="stagechip">New Inquiry</span>' + (d.aiScore != null ? ' <span class="tag tag--ai tag--ai-' + esc(d.aiTier) + '" title="AI lead score from the chat assistant">AI ' + esc(d.aiScore) + " · " + esc(d.aiTier) + "</span>" : "") + ' <span class="sub">' + d.events.length + " inquir" + (d.events.length > 1 ? "ies" : "y") + "</span>" +
         "<ul>" + d.events.map(function (e, i) { return "<li>#" + (i + 1) + " · " + esc(fmt(e.submittedAt)) + " · " + esc(e.ref) + "</li>"; }).join("") + "</ul></article>";
     }).join("") : '<p class="empty">No deals yet.</p>';
     $("#activity").innerHTML = model.activity.length ? model.activity.slice().reverse().map(function (a) {
