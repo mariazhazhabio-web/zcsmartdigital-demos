@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Northlight Care · Healthcare Brand &amp; Booking · Portfolio Demo by ZC Smart Digital</title>
+<meta name="description" content="Portfolio Demo: a fictional virtual-care brand with a working booking flow and patient, clinician and admin dashboards.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2317665c'/%3E%3Ctext x='32' y='44' font-family='Arial' font-weight='700' font-size='34' text-anchor='middle' fill='%23e4f0e9'%3EN%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+<link rel="stylesheet" href="../_shared/demo-shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;650;750&display=swap">
+<style>
+/* Layout: full-width colour bands, each with a 1180px inner column; booking + dashboard form one connected product section */
+:root{
+  --forest:#173b38; --teal:#17665c; --teal-hover:#104b43; --mint:#e4f0e9; --sand:#f1e0ca; --sage:#77a895; --amber:#dc9c54;
+  --bg:#f7f9f7; --surface:#ffffff; --fg:#173b38; --muted:#56736e; --line:#dce6e1; --field:#a6bdb5;
+  --band:#e4f0e9; --notice-bg:#fff2d9; --notice-fg:#634b21;
+  --btn:#17665c; --btn-hover:#104b43; --btn-fg:#ffffff; --chip:#e4f0e9;
+  --ok:#2f7d4f; --ok-bg:#e1f2e7; --warn:#8a5a12; --warn-bg:#fbecd2; --bad:#9b3b2e; --bad-bg:#f8e1dc; --info:#1f5f86; --info-bg:#dfeef7;
+  --display:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --body:"Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gutter-l:max(16px, env(safe-area-inset-left, 0px)); --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1f1d; --surface:#162b28; --fg:#e6f1ec; --muted:#9cb8b0; --line:#2b4541; --field:#4a6862;
+  --band:#132925; --notice-bg:#2f2614; --notice-fg:#efd3a2;
+  --btn:#5fb5a3; --btn-hover:#7cc7b6; --btn-fg:#0d211e; --chip:#1f3a36;
+  --ok:#8fd4a8; --ok-bg:#183a28; --warn:#f0c27a; --warn-bg:#3a2c12; --bad:#f0a294; --bad-bg:#3d1f1a; --info:#9cccec; --info-bg:#16303f;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1f1d; --surface:#162b28; --fg:#e6f1ec; --muted:#9cb8b0; --line:#2b4541; --field:#4a6862;
+  --band:#132925; --notice-bg:#2f2614; --notice-fg:#efd3a2;
+  --btn:#5fb5a3; --btn-hover:#7cc7b6; --btn-fg:#0d211e; --chip:#1f3a36;
+  --ok:#8fd4a8; --ok-bg:#183a28; --warn:#f0c27a; --warn-bg:#3a2c12; --bad:#f0a294; --bad-bg:#3d1f1a; --info:#9cccec; --info-bg:#16303f;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--body);margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,6.5vw,76px);line-height:1.02;letter-spacing:-0.03em;font-weight:800}
+h2{font-size:clamp(28px,4vw,44px);line-height:1.1;letter-spacing:-0.02em;font-weight:800}
+h3{font-size:20px;line-height:1.3;font-weight:600}
+p{margin:0;max-width:62ch}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r);padding-block:64px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:750;color:var(--teal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow{color:var(--sage)}}
+:root[data-theme="dark"] .eyebrow{color:var(--sage)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.grid>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px}
+
+.btn,button{background:var(--btn);color:var(--btn-fg);border:0;border-radius:10px;padding:12px 20px;font:inherit;font-weight:650;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;min-height:44px}
+.btn:hover,button:hover{background:var(--btn-hover)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost,button.ghost{background:transparent;color:var(--fg);border:1px solid var(--field)}
+.btn.ghost:hover,button.ghost:hover{background:var(--chip)}
+button.small-btn{min-height:34px;padding:6px 12px;font-size:13px;border-radius:8px}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+
+.notice{background:var(--notice-bg);color:var(--notice-fg);font-size:13px;text-align:center;padding:10px var(--gutter-r) 10px var(--gutter-l)}
+header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px var(--gutter-r) 12px var(--gutter-l)}
+.logo{font-family:var(--display);font-size:23px;font-weight:800;letter-spacing:-.02em;text-decoration:none}
+.logo span{color:var(--sage)}
+.navlinks{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:14px}
+.navlinks a:not(.btn){text-decoration:none}
+.navlinks a:not(.btn):hover{text-decoration:underline}
+@media (max-width:640px){.navlinks a.hide-sm{display:none}}
+
+.hero{background:var(--band)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero .wrap>*{min-width:0}
+.heroart{background:#bed9cb;border-radius:28px;padding:24px;display:grid;gap:12px}
+.heroart svg{width:100%;height:auto;max-height:240px}
+.heroart .card{padding:14px;color:#173b38;background:#fff;border-color:#dce6e1}
+.heroart .card .muted{color:#56736e}
+@media (max-width:760px){.hero .wrap{grid-template-columns:1fr}}
+
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border-radius:999px;padding:3px 11px;font-size:12px;font-weight:700;white-space:nowrap}
+.status{border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.s-booked{background:var(--info-bg);color:var(--info)}
+.s-checked-in{background:var(--warn-bg);color:var(--warn)}
+.s-completed{background:var(--ok-bg);color:var(--ok)}
+.s-cancelled{background:var(--bad-bg);color:var(--bad)}
+
+/* Booking */
+#booking{background:var(--band)}
+.book-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:32px;align-items:start}
+.book-grid>*{min-width:0}
+@media (max-width:860px){.book-grid{grid-template-columns:1fr}}
+.steps{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.steps li{display:flex;gap:12px;align-items:center}
+.steps b{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:13px;flex:none}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend,label.lbl{display:block;font-weight:650;margin-bottom:8px;padding:0}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.choice span{display:block;border:1px solid var(--field);border-radius:10px;padding:10px 12px;background:var(--surface);font-size:14px;line-height:1.35}
+.choice span small{display:block;color:var(--muted);font-size:12px}
+.choice input:checked+span{border-color:var(--btn);box-shadow:inset 0 0 0 1px var(--btn);background:var(--chip)}
+.choice input:focus-visible+span{outline:3px solid var(--amber);outline-offset:2px}
+.choice input:disabled+span{opacity:.45;text-decoration:line-through;cursor:not-allowed}
+.slots{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+.slots .choice span{text-align:center;font-variant-numeric:tabular-nums}
+input[type=date],select{width:100%;padding:11px 12px;border:1px solid var(--field);border-radius:10px;background:var(--surface);color:var(--fg);font:inherit;min-height:44px}
+.form-msg{font-size:14px;min-height:1.4em}
+.form-msg.err{color:var(--bad)}
+.confirm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ref{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0}
+dl.kv dt{color:var(--muted);font-size:14px}
+dl.kv dd{margin:0;font-weight:650}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Dashboards */
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{background:var(--chip);color:var(--fg)}
+.tabs button[aria-pressed="true"]{background:var(--btn);color:var(--btn-fg)}
+.dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.sync{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.dot.live{background:var(--ok)}
+.dot.local{background:var(--amber)}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.mono{font-variant-numeric:tabular-nums;font-weight:650}
+.empty{border:1px dashed var(--field);border-radius:12px;padding:24px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--fg);margin-bottom:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--bg)}
+.kpi b{display:block;font-family:var(--display);font-size:34px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:130px 1fr 36px;gap:10px;align-items:center;font-size:14px}
+.bar-track{height:12px;border-radius:6px;background:var(--chip);overflow:hidden}
+.bar-fill{height:100%;background:var(--btn);border-radius:6px;transition:width .3s ease}
+@media (max-width:480px){.bar{grid-template-columns:96px 1fr 30px}}
+td.mono{white-space:nowrap}
+@media (max-width:640px){
+  #dash table,#dash tbody,#dash tr,#dash td,#dash th{display:block}
+  #dash thead{display:none}
+  #dash tbody tr{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:10px;background:var(--surface)}
+  #dash tbody tr.day{border:0;padding:12px 0 2px;margin:0;background:none}
+  #dash tbody tr.day th{border:0;padding:0}
+  #dash td{border:0;padding:5px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right}
+  #dash td::before{content:attr(data-label);color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;text-align:left;font-weight:700}
+  #dash td:empty{display:none}
+  #dash td.act::before{content:none}
+  #dash td.act{justify-content:flex-end}
+}
+
+/* Studio */
+.dark{background:#173b38;color:#fff}
+.dark .eyebrow{color:#b9dfce}
+.dark .card{background:#244a45;border-color:#41645e;color:#fff}
+.dark .btn{background:#e4f0e9;color:#173b38}
+.dark .btn:hover{background:#fff}
+.creative{min-height:260px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:24px;border-radius:18px;background:#cfe5d8;color:#173b38}
+.creative b{font-family:var(--display);font-size:32px;line-height:1.08;letter-spacing:-.02em}
+.creative:nth-child(2){background:#f1e0ca}
+.creative:nth-child(3){background:#24685d;color:#fff}
+.creative small{font-weight:750;font-size:11px;letter-spacing:.1em}
+.swatch{height:80px;border-radius:10px;margin-bottom:8px;border:1px solid var(--line)}
+footer{background:#173b38;color:#fff;font-size:13px;text-align:center}
+footer .wrap{padding-block:28px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+</style>
+</head>
+<body>
+<header class="zc-shell" aria-label="ZC Smart Digital portfolio">
+  <a class="zc-back" href="/#portfolio" data-zc-back>&larr; Back to Demos</a>
+  <span class="zc-brand">ZC Smart Digital <b>&middot;</b> Healthcare Brand &amp; Booking</span>
+  <span class="zc-labels"><span class="zc-label">Portfolio Demo</span><span class="zc-label zc-label--ghost">Fictional clinic</span></span>
+</header>
+<div class="notice">Portfolio concept by ZC Smart Digital · Fictional healthcare service · No real medical appointments or patient data</div>
+<header class="site"><nav aria-label="Main">
+  <a class="logo" href="#home">Northlight<span>Care</span></a>
+  <div class="navlinks">
+    <a href="#services" class="hide-sm">Care options</a>
+    <a href="#dashboard">Dashboards</a>
+    <a href="#studio" class="hide-sm">Creative studio</a>
+    <a href="#case" class="hide-sm">Case study</a>
+    <a class="btn" href="#booking">Book a demo visit</a>
+  </div>
+</nav></header>
+
+<section class="hero" id="home"><div class="wrap">
+  <div class="stack">
+    <div class="eyebrow">Care that fits your life</div>
+    <h1>Feel heard.<br>Feel better.</h1>
+    <p>Compassionate virtual care, designed around you. Connect with a care professional from the comfort of home.</p>
+    <div class="row-actions"><a class="btn" href="#booking">Find a visit →</a><a class="btn ghost" href="#services">Explore care options</a></div>
+    <p class="muted small">Simple scheduling · Transparent experience · Designed for accessibility</p>
+  </div>
+  <div class="heroart">
+    <svg viewBox="0 0 340 210" role="img" aria-label="Illustration of a virtual care consultation"><rect x="35" y="8" width="270" height="194" rx="20" fill="#fff"/><rect x="48" y="22" width="244" height="130" rx="12" fill="#e5f0e9"/><circle cx="170" cy="68" r="30" fill="#bb805b"/><path d="M140 65 Q133 23 170 29 Q204 29 200 67 L190 49 Q164 60 140 65" fill="#173b38"/><path d="M111 152 Q116 105 170 105 Q224 105 229 152" fill="#17665c"/><path d="M159 106 L170 127 L181 106" fill="#fff"/><circle cx="170" cy="176" r="13" fill="#17665c"/><path d="M163 176h14m-7-7v14" stroke="#fff" stroke-width="3" fill="none"/><rect x="250" y="114" width="32" height="28" rx="6" fill="#f1e0ca"/></svg>
+    <div class="card"><strong>Your care, on your terms.</strong><br><small class="muted">A welcoming, digital-first experience.</small></div>
+  </div>
+</div></section>
+
+<section id="services"><div class="wrap stack" style="gap:24px">
+  <div class="stack" style="gap:8px"><div class="eyebrow">Find your starting point</div><h2>Care for everyday life.</h2></div>
+  <div class="grid">
+    <div class="card stack"><span class="pill" style="align-self:flex-start">Primary care · 20 min</span><h3>Everyday health</h3><p>Discuss general health concerns and routine wellness needs.</p><a href="#booking" data-pick="everyday">Book this visit →</a></div>
+    <div class="card stack"><span class="pill" style="align-self:flex-start">Mental wellness · 45 min</span><h3>Space to talk</h3><p>A supportive entry point for mental wellness consultations.</p><a href="#booking" data-pick="wellness">Book this visit →</a></div>
+    <div class="card stack"><span class="pill" style="align-self:flex-start">Follow-up · 15 min</span><h3>Stay connected</h3><p>A simple way to schedule a follow-up with your care team.</p><a href="#booking" data-pick="followup">Book this visit →</a></div>
+  </div>
+</div></section>
+
+<section id="booking"><div class="wrap book-grid">
+  <div class="stack">
+    <div class="eyebrow">Working booking flow</div>
+    <h2>Book in three simple steps.</h2>
+    <p>Choose a service, pick an open time and confirm. Booked times disappear for the next person, and every booking shows up in the dashboards below. No personal information required.</p>
+    <ol class="steps card">
+      <li><b>1</b>Choose care and how to meet</li>
+      <li><b>2</b>Pick a date and an open time</li>
+      <li><b>3</b>Confirm and get a reference number</li>
+    </ol>
+    <p class="muted small">Clinic hours for this concept: Monday to Saturday, 9:00 AM to 5:00 PM. Times are in your local time zone.</p>
+  </div>
+
+  <div class="card">
+    <form id="book" class="stack" style="gap:20px" novalidate>
+      <fieldset><legend>Care service</legend>
+        <div class="choices" id="serviceChoices"></div>
+      </fieldset>
+      <fieldset><legend>How would you like to meet?</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="mode" id="mode-video" value="Video visit" checked><span>Video visit<small>Join from any device</small></span></label>
+          <label class="choice"><input type="radio" name="mode" id="mode-phone" value="Phone call"><span>Phone call<small>No camera needed</small></span></label>
+        </div>
+      </fieldset>
+      <div><label class="lbl" for="date">Appointment date</label><input id="date" type="date" required></div>
+      <fieldset><legend>Open times <span class="muted small" id="slotNote"></span></legend>
+        <div class="choices slots" id="slotChoices"></div>
+      </fieldset>
+      <p class="form-msg" id="formMsg" role="alert"></p>
+      <button type="submit" id="confirmBtn">Confirm demo booking</button>
+    </form>
+
+    <div id="confirmation" class="stack" role="status" hidden tabindex="-1">
+      <div class="confirm-head"><span class="pill">Demo confirmed</span><span class="ref" id="cRef"></span></div>
+      <h3>Your sample visit is booked.</h3>
+      <dl class="kv">
+        <dt>Service</dt><dd id="cService"></dd>
+        <dt>Date</dt><dd id="cDate"></dd>
+        <dt>Time</dt><dd id="cTime"></dd>
+        <dt>Format</dt><dd id="cMode"></dd>
+      </dl>
+      <p class="muted small" id="cWhere"></p>
+      <div class="row-actions"><a class="btn" href="#dashboard" id="seeDash">View in patient dashboard</a><button type="button" class="ghost" id="reset">Book another visit</button></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="dashboard"><div class="wrap stack" style="gap:20px">
+  <div class="dash-head">
+    <div class="stack" style="gap:8px"><div class="eyebrow">Product experience</div><h2>One connected care journey.</h2></div>
+    <div class="sync" id="sync"><span class="dot"></span><span>Connecting…</span></div>
+  </div>
+  <div class="tabs" role="group" aria-label="Dashboard views">
+    <button type="button" data-view="patient" aria-pressed="true">Patient</button>
+    <button type="button" data-view="clinician" aria-pressed="false">Clinician</button>
+    <button type="button" data-view="admin" aria-pressed="false">Admin</button>
+  </div>
+  <div class="card" id="dash" aria-live="polite"></div>
+</div></section>
+
+<section class="dark" id="studio"><div class="wrap stack" style="gap:24px">
+  <div class="stack" style="gap:8px"><div class="eyebrow">Growth creative · Campaign concept 01</div><h2>Care feels closer.</h2><p>Three messaging angles for a hypothetical paid social campaign, one per funnel stage. Original concept layouts, not live advertisements.</p></div>
+  <div class="grid">
+    <div class="creative"><small>NORTHLIGHT CARE · AWARENESS</small><b>Good care.<br>Closer than<br>you think.</b><span>Meet care on your terms →</span></div>
+    <div class="creative"><small>NORTHLIGHT CARE · CONSIDERATION</small><b>Make time<br>for feeling<br>better.</b><span>Explore virtual care →</span></div>
+    <div class="creative"><small>NORTHLIGHT CARE · CONVERSION</small><b>Your next<br>step starts<br>here.</b><span>Find a visit →</span></div>
+  </div>
+  <h3>Email marketing concept</h3>
+  <div class="card stack"><small>SUBJECT: Your next step toward feeling better</small><h2>Care on your schedule.</h2><p>Explore a simpler way to connect with a care team. Choose a service and find a time that works for you.</p><a href="#booking" class="btn" style="align-self:flex-start">Explore appointments</a><p class="small" style="opacity:.8">Concept email · Not connected to an email service</p></div>
+</div></section>
+
+<section id="brand"><div class="wrap stack" style="gap:24px">
+  <div class="stack" style="gap:8px"><div class="eyebrow">Visual identity</div><h2>Calm confidence, human warmth.</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    <div><div class="swatch" style="background:#173b38"></div>Forest · #173B38</div>
+    <div><div class="swatch" style="background:#17665c"></div>Teal · #17665C</div>
+    <div><div class="swatch" style="background:#e4f0e9"></div>Mint · #E4F0E9</div>
+    <div><div class="swatch" style="background:#f1e0ca"></div>Sand · #F1E0CA</div>
+  </div>
+  <p>Typography: Bricolage Grotesque for headlines, Figtree for reading. Rounded surfaces, generous whitespace and plain-language calls to action create a reassuring experience. Dark mode keeps the same forest and teal identity.</p>
+</div></section>
+
+<section id="case"><div class="wrap stack" style="gap:24px">
+  <div class="stack" style="gap:8px"><div class="eyebrow">Portfolio case study · ZC Smart Digital</div><h2>From discovery to appointment.</h2></div>
+  <div class="grid">
+    <div class="card stack"><h3>Challenge</h3><p>Hypothesis: visitors may abandon healthcare websites when service options and scheduling are unclear.</p></div>
+    <div class="card stack"><h3>Design approach</h3><p>Make the next action obvious, show only times that are actually open, give a reference number at the end, and connect campaign messaging to booking.</p></div>
+    <div class="card stack"><h3>Validation plan</h3><p>Run usability tests, measure booking completion and review accessibility before any real deployment.</p></div>
+  </div>
+  <h3>Growth experiment backlog</h3>
+  <div class="card table-scroll"><table>
+    <thead><tr><th>Experiment</th><th>Primary metric</th><th>Hypothesis</th></tr></thead>
+    <tbody>
+      <tr><td>Hero CTA: Find a visit vs. Explore care</td><td>Booking start rate</td><td>Direct language increases intent.</td></tr>
+      <tr><td>Convenience vs. reassurance ad</td><td>Qualified landing-page visits</td><td>Message relevance improves engagement.</td></tr>
+      <tr><td>Single-step vs. guided booking</td><td>Booking completion rate</td><td>Reduced cognitive load improves completion.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted small">No actual user research, campaign spend, conversion data or clinical validation has been performed. Bookings in this demo are fictional and hold no personal information.</p>
+</div></section>
+
+<footer><div class="wrap">Northlight Care · Self-initiated fictional concept · ZC Smart Digital · Not a healthcare provider. For emergencies, contact local emergency services.</div></footer>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+  const SERVICES = [
+    {id:'everyday', name:'Everyday health', note:'Primary care · 20 min'},
+    {id:'wellness', name:'Mental wellness', note:'Space to talk · 45 min'},
+    {id:'followup', name:'Follow-up', note:'Stay connected · 15 min'}
+  ];
+  const SLOTS = [['0900','9:00 AM'],['1030','10:30 AM'],['1130','11:30 AM'],['1400','2:00 PM'],['1530','3:30 PM'],['1630','4:30 PM']];
+  const STATUS_LABEL = {booked:'Booked','checked-in':'Checked in',completed:'Completed',cancelled:'Cancelled'};
+  const $ = id => document.getElementById(id);
+  const svcName = id => (SERVICES.find(s => s.id === id) || {}).name || id;
+  const slotLabel = id => (SLOTS.find(s => s[0] === id) || [,id])[1];
+
+  // ---------- storage: shared db when available, this-browser fallback otherwise ----------
+  const LS_KEY = 'northlight.bookings.v1', MINE_KEY = 'northlight.mine.v1';
+  const lsGet = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  const state = {
+    shared: new Map(), local: new Map(Object.entries(lsGet(LS_KEY, {}))),
+    mine: new Set(lsGet(MINE_KEY, [])), db: null, myId: null,
+    sharedWritable: null, sync: 'connecting', view: 'patient'
+  };
+  for (const r of state.local.values()) r.where = 'device';
+  const saveLocal = () => { const o = {}; for (const [k, v] of state.local) o[k] = v; lsSet(LS_KEY, o); };
+  const rows = () => {
+    const m = new Map(state.shared);
+    for (const [k, v] of state.local) if (!m.has(k)) m.set(k, v);
+    return [...m.values()];
+  };
+  const active = r => r.status !== 'cancelled';
+  const isMine = r => state.mine.has(r.ref) || (state.myId && r.by === state.myId);
+  const slotTaken = (date, slot, svc) => rows().some(r => active(r) && r.date === date && r.slot === slot && r.service === svc);
+
+  async function writeNew(row) {
+    if (state.db && state.sharedWritable !== false) {
+      try {
+        const body = {...row}; delete body.where; if (body.by == null) delete body.by;
+        await state.db.collection('bookings').doc(row.id).set(body);
+        row.where = 'shared'; state.shared.set(row.id, row); return row;
+      } catch (e) { state.sharedWritable = false; updateSync(); }
+    }
+    row.where = 'device'; state.local.set(row.id, row); saveLocal(); return row;
+  }
+  async function patch(row, fields) {
+    if (row.where === 'shared' && state.db) {
+      try { await state.db.collection('bookings').doc(row.id).update(fields); Object.assign(row, fields); return true; }
+      catch (e) { toast('You can view shared bookings but not change them. Ask the owner for Contributor access.'); return false; }
+    }
+    Object.assign(row, fields); state.local.set(row.id, row); saveLocal(); return true;
+  }
+
+  // ---------- booking form ----------
+  const form = $('book'), dateEl = $('date');
+  const pad = n => String(n).padStart(2, '0');
+  const isoLocal = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const parseDate = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const fmtDate = s => parseDate(s).toLocaleDateString(undefined, {weekday:'short', month:'long', day:'numeric', year:'numeric'});
+  const fmtShort = s => parseDate(s).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'});
+  const nextOpenDay = d => { const x = new Date(d); while (x.getDay() === 0) x.setDate(x.getDate() + 1); return x; };
+  const now = new Date();
+  // if today is past the last slot, start tomorrow
+  const startDay = new Date(now); if (now.getHours() * 60 + now.getMinutes() >= 16 * 60 + 30) startDay.setDate(startDay.getDate() + 1);
+  dateEl.min = isoLocal(now);
+  const maxD = new Date(now); maxD.setDate(maxD.getDate() + 60); dateEl.max = isoLocal(maxD);
+  dateEl.value = isoLocal(nextOpenDay(startDay));
+
+  $('serviceChoices').innerHTML = SERVICES.map((s, i) =>
+    `<label class="choice"><input type="radio" name="service" id="svc-${s.id}" value="${s.id}" ${i === 0 ? 'checked' : ''}><span>${s.name}<small>${s.note}</small></span></label>`).join('');
+
+  const selected = name => (form.querySelector(`input[name="${name}"]:checked`) || {}).value;
+  function renderSlots() {
+    const date = dateEl.value, svc = selected('service'), prev = selected('slot');
+    const msg = $('formMsg'); msg.textContent = ''; msg.className = 'form-msg';
+    let html = '', open = 0;
+    const d = date ? parseDate(date) : null;
+    const closed = !d || d.getDay() === 0;
+    for (const [id, label] of SLOTS) {
+      const [h, m] = [Number(id.slice(0, 2)), Number(id.slice(2))];
+      const past = d && isoLocal(d) === isoLocal(new Date()) && (h * 60 + m) <= (new Date().getHours() * 60 + new Date().getMinutes());
+      const taken = date && slotTaken(date, id, svc);
+      const dis = closed || past || taken;
+      if (!dis) open++;
+      html += `<label class="choice"><input type="radio" name="slot" id="slot-${id}" value="${id}" ${dis ? 'disabled' : ''} ${(!dis && prev === id) ? 'checked' : ''}><span>${label}${taken ? '<small>Booked</small>' : past ? '<small>Passed</small>' : ''}</span></label>`;
+    }
+    $('slotChoices').innerHTML = html;
+    $('slotNote').textContent = closed ? (d ? '· Closed on Sundays' : '') : `· ${open} of ${SLOTS.length} open`;
+    if (!selected('slot')) { const first = form.querySelector('input[name="slot"]:not(:disabled)'); if (first) first.checked = true; }
+    $('confirmBtn').disabled = !selected('slot');
+  }
+  form.addEventListener('change', e => { if (e.target.name !== 'slot') renderSlots(); else $('confirmBtn').disabled = false; });
+  dateEl.addEventListener('input', renderSlots);
+
+  const newRef = () => { const a = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = 'NL-'; for (let i = 0; i < 4; i++) s += a[Math.floor(Math.random() * a.length)]; return s; };
+
+  let busy = false;
+  async function confirmBooking(e) {
+    if (e) e.preventDefault();
+    if (busy) return;
+    const msg = $('formMsg');
+    const date = dateEl.value, svc = selected('service'), slot = selected('slot'), mode = selected('mode');
+    const fail = t => { msg.textContent = t; msg.className = 'form-msg err'; };
+    if (!date) return fail('Choose an appointment date.');
+    if (date < dateEl.min || date > dateEl.max) return fail('Choose a date within the next 60 days.');
+    if (parseDate(date).getDay() === 0) return fail('The clinic is closed on Sundays. Pick another day.');
+    if (!slot) return fail('Pick one of the open times.');
+    if (slotTaken(date, slot, svc)) { renderSlots(); return fail('That time was just booked. Pick another open time.'); }
+    busy = true; const btn = $('confirmBtn'); btn.disabled = true; btn.textContent = 'Confirming…';
+    const ref = newRef();
+    const row = { id: `${date}_${slot}_${svc}`, ref, service: svc, date, slot, mode, status: 'booked',
+                  createdAt: new Date().toISOString(), by: state.myId || null, sample: true };
+    try {
+      await writeNew(row);
+      state.mine.add(ref); lsSet(MINE_KEY, [...state.mine]);
+      $('cRef').textContent = ref; $('cService').textContent = svcName(svc);
+      $('cDate').textContent = fmtDate(date); $('cTime').textContent = slotLabel(slot); $('cMode').textContent = mode;
+      $('cWhere').textContent = row.where === 'shared'
+        ? 'Saved to the shared demo schedule. It now appears in the patient, clinician and admin dashboards for everyone viewing this page.'
+        : 'Saved in this browser. It appears in the dashboards below on this device.';
+      form.hidden = true; $('confirmation').hidden = false; $('confirmation').focus({preventScroll: true});
+      renderAll();
+    } catch (err) {
+      fail('The booking could not be saved. Try again in a moment.');
+    } finally {
+      busy = false; btn.textContent = 'Confirm demo booking'; btn.disabled = !selected('slot');
+    }
+  }
+  form.addEventListener('submit', confirmBooking);
+  // click handler too, so booking works even where a sandbox blocks form submission
+  $('confirmBtn').addEventListener('click', confirmBooking);
+  $('reset').addEventListener('click', () => { form.hidden = false; $('confirmation').hidden = true; renderSlots(); });
+  $('seeDash').addEventListener('click', () => setView('patient'));
+  document.querySelectorAll('[data-pick]').forEach(a => a.addEventListener('click', () => {
+    const r = $('svc-' + a.dataset.pick); if (r) { r.checked = true; form.hidden = false; $('confirmation').hidden = true; renderSlots(); }
+  }));
+
+  // ---------- dashboards ----------
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const sortKey = r => r.date + r.slot;
+  const todayIso = () => isoLocal(new Date());
+  const statusChip = s => `<span class="status s-${esc(s)}">${esc(STATUS_LABEL[s] || s)}</span>`;
+  const empty = (title, body, cta) => `<div class="empty"><strong>${title}</strong>${body}${cta ? `<div style="margin-top:12px"><a class="btn" href="#booking">${cta}</a></div>` : ''}</div>`;
+
+  function patientView() {
+    const mine = rows().filter(isMine).sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+    const upcoming = mine.filter(r => active(r) && r.status !== 'completed' && r.date >= todayIso());
+    const next = upcoming[0];
+    let html = `<div class="stack" style="gap:20px"><div class="stack" style="gap:6px"><span class="pill" style="align-self:flex-start">Sample patient workspace</span><h3>Your visits</h3></div>`;
+    if (!mine.length) return html + empty('No visits booked yet', 'Book a demo visit above and it will appear here with its reference number.', 'Find a visit') + '</div>';
+    if (next) html += `<div class="card" style="background:var(--band)"><div class="muted small">Next visit</div><div class="ref" style="font-size:22px">${esc(svcName(next.service))}</div><div>${esc(fmtDate(next.date))} at ${esc(slotLabel(next.slot))} · ${esc(next.mode)}</div><div class="muted small">Reference ${esc(next.ref)} · Your link to join appears 10 minutes before the visit.</div></div>`;
+    html += `<div class="table-scroll"><table><thead><tr><th>Ref</th><th>Service</th><th>Date</th><th>Time</th><th>Status</th><th></th></tr></thead><tbody>`;
+    for (const r of mine) {
+      const canCancel = r.status === 'booked';
+      html += `<tr><td class="mono" data-label="Ref">${esc(r.ref)}</td><td data-label="Service">${esc(svcName(r.service))}</td><td data-label="Date">${esc(fmtShort(r.date))}</td><td class="mono" data-label="Time">${esc(slotLabel(r.slot))}</td><td data-label="Status">${statusChip(r.status)}</td><td class="act">${canCancel ? `<button type="button" class="ghost small-btn" data-act="cancel" data-id="${esc(r.id)}">Cancel visit</button>` : ''}</td></tr>`;
+    }
+    return html + `</tbody></table></div></div>`;
+  }
+
+  function clinicianView() {
+    const q = rows().filter(r => active(r) && r.status !== 'completed').sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+    let html = `<div class="stack" style="gap:20px"><div class="stack" style="gap:6px"><span class="pill" style="align-self:flex-start">Sample clinician workspace</span><h3>Visit queue</h3><p class="muted small">Check patients in when they arrive, then mark the visit complete. Illustrative only: no medical records.</p></div>`;
+    if (!q.length) return html + empty('The queue is clear', 'New bookings land here in date and time order.', null) + '</div>';
+    let lastDate = '';
+    html += `<div class="table-scroll"><table><thead><tr><th>Time</th><th>Ref</th><th>Service</th><th>Format</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+    for (const r of q) {
+      if (r.date !== lastDate) { lastDate = r.date; html += `<tr class="day"><th colspan="6" style="padding-top:18px">${esc(fmtDate(r.date))}${r.date === todayIso() ? ' · Today' : ''}</th></tr>`; }
+      const act = r.status === 'booked' ? `<button type="button" class="small-btn" data-act="checkin" data-id="${esc(r.id)}">Check in</button>`
+        : `<button type="button" class="small-btn" data-act="complete" data-id="${esc(r.id)}">Complete visit</button>`;
+      html += `<tr><td class="mono" data-label="Time">${esc(slotLabel(r.slot))}</td><td class="mono" data-label="Ref">${esc(r.ref)}</td><td data-label="Service">${esc(svcName(r.service))}</td><td data-label="Format">${esc(r.mode)}</td><td data-label="Status">${statusChip(r.status)}</td><td class="act">${act}</td></tr>`;
+    }
+    return html + `</tbody></table></div></div>`;
+  }
+
+  function adminView() {
+    const all = rows();
+    const count = s => all.filter(r => r.status === s).length;
+    const upcoming = all.filter(r => r.status === 'booked' && r.date >= todayIso()).length;
+    const live = all.filter(active);
+    const max = Math.max(1, ...SERVICES.map(s => live.filter(r => r.service === s.id).length));
+    const capacity = SLOTS.length * SERVICES.length;
+    const todayBooked = live.filter(r => r.date === todayIso()).length;
+    let html = `<div class="stack" style="gap:22px"><div class="stack" style="gap:6px"><span class="pill" style="align-self:flex-start">Sample operations workspace</span><h3>Booking overview</h3></div>
+      <div class="kpis">
+        <div class="kpi"><b>${all.length}</b><span>Total bookings</span></div>
+        <div class="kpi"><b>${upcoming}</b><span>Upcoming</span></div>
+        <div class="kpi"><b>${count('completed')}</b><span>Completed</span></div>
+        <div class="kpi"><b>${count('cancelled')}</b><span>Cancelled</span></div>
+        <div class="kpi"><b>${Math.round(todayBooked / capacity * 100)}%</b><span>Today's capacity used (${todayBooked}/${capacity})</span></div>
+      </div>
+      <div class="stack" style="gap:10px"><strong>Active bookings by service</strong><div class="bars">${SERVICES.map(s => { const n = live.filter(r => r.service === s.id).length; return `<div class="bar"><span>${s.name}</span><div class="bar-track"><div class="bar-fill" style="width:${n / max * 100}%"></div></div><span class="mono" style="text-align:right">${n}</span></div>`; }).join('')}</div></div>`;
+    if (!all.length) return html + empty('No bookings yet', 'Totals update the moment someone confirms a visit.', 'Make the first booking') + '</div>';
+    const recent = [...all].sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 12);
+    html += `<div class="stack" style="gap:10px"><strong>Latest activity</strong><div class="table-scroll"><table><thead><tr><th>Ref</th><th>Service</th><th>Visit</th><th>Status</th><th>Saved</th></tr></thead><tbody>`;
+    for (const r of recent) html += `<tr><td class="mono" data-label="Ref">${esc(r.ref)}</td><td data-label="Service">${esc(svcName(r.service))}</td><td data-label="Visit">${esc(fmtShort(r.date))}, ${esc(slotLabel(r.slot))}</td><td data-label="Status">${statusChip(r.status)}</td><td class="muted small" data-label="Saved">${r.where === 'shared' ? 'Shared' : 'This device'}</td></tr>`;
+    return html + `</tbody></table></div></div></div>`;
+  }
+
+  const VIEWS = {patient: patientView, clinician: clinicianView, admin: adminView};
+  function renderDash() { $('dash').innerHTML = VIEWS[state.view](); }
+  function setView(v) {
+    state.view = v;
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+    renderDash();
+  }
+  document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  $('dash').addEventListener('click', async e => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const row = rows().find(r => r.id === b.dataset.id); if (!row) return;
+    const next = {cancel: 'cancelled', checkin: 'checked-in', complete: 'completed'}[b.dataset.act];
+    b.disabled = true;
+    if (await patch(row, {status: next, updatedAt: new Date().toISOString()})) toast(`${row.ref}: ${STATUS_LABEL[next]}`);
+    renderAll();
+  });
+
+  function updateSync() {
+    const el = $('sync'); let dot = '', text = '';
+    if (state.sync === 'live' && state.sharedWritable !== false) { dot = 'live'; text = 'Live · shared schedule'; }
+    else if (state.sync === 'live') { dot = 'local'; text = 'Viewing shared schedule · your bookings save in this browser'; }
+    else if (state.sync === 'slow') { dot = 'local'; text = 'Shared schedule not reachable yet · saving in this browser'; }
+    else if (state.sync === 'local') { dot = 'local'; text = 'Saving in this browser'; }
+    else { text = 'Connecting…'; }
+    el.innerHTML = `<span class="dot ${dot}"></span><span>${text}</span>`;
+  }
+  function renderAll() { renderSlots(); renderDash(); updateSync(); }
+
+  let toastT;
+  function toast(t) { const el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 3200); }
+
+  renderAll();
+
+  // ---------- connect to the shared store ----------
+  (async () => {
+    const use = window.claude && window.claude.use;
+    if (!use) { state.sync = 'local'; updateSync(); return; }
+    const [db, user] = await Promise.all([use('db').catch(() => null), use('user').catch(() => null)]);
+    if (user) { try { state.myId = await user.id(); } catch {} try { const c = await user.can('data.write'); if (c === false) state.sharedWritable = false; } catch {} }
+    if (!db) { state.sync = 'local'; updateSync(); return; }
+    state.db = db;
+    const timer = setTimeout(() => { if (state.sync === 'connecting') { state.sync = 'slow'; updateSync(); } }, 10000);
+    db.collection('bookings').onSnapshot(snap => {
+      const m = new Map();
+      for (const d of snap.docs) { const v = d.data(); if (v && v.ref) m.set(d.id, {...v, id: d.id, where: 'shared'}); }
+      state.shared = m;
+      if (!snap.metadata.fromCache) { clearTimeout(timer); state.sync = 'live'; }
+      renderAll();
+    }, () => { clearTimeout(timer); state.db = null; state.sync = 'local'; renderAll(); });
+  })();
+})();
+</script>
+<script src="../_shared/demo-shell.js"></script>
+</body>
+</html>
